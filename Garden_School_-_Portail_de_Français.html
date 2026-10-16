@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden School - Portail de Français (3ème Année) | M. Krikor Mkhsian</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Fredoka (French friendly kids font) & Cairo (Arabic font for Teacher Dashboard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Cairo:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        garden: {
+                            cream: '#FDF8EC',
+                            beige: '#F4EBD0',
+                            sand: '#E6D5B8',
+                            green: '#557A46',
+                            lightgreen: '#7A9D54',
+                            pale: '#EBF3E8',
+                            brown: '#6C4A32',
+                            lightbrown: '#9C7248',
+                            gold: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDF8EC;
+            background-image: radial-gradient(#E6D5B8 1.2px, transparent 1.2px);
+            background-size: 24px 24px;
+            font-family: 'Fredoka', 'Cairo', sans-serif;
+            color: #4A3525;
+            overflow-x: hidden;
+        }
+        .wood-border {
+            border: 4px solid #9C7248;
+            box-shadow: 0 8px 0 #6C4A32, 0 12px 20px rgba(0,0,0,0.1);
+        }
+        .wood-card {
+            border: 3px solid #9C7248;
+            box-shadow: 0 6px 0 #6C4A32;
+        }
+        .green-btn {
+            background-color: #557A46;
+            border-bottom: 4px solid #3B5630;
+            transition: all 0.15s ease;
+        }
+        .green-btn:hover {
+            background-color: #638B52;
+            transform: translateY(-1px);
+        }
+        .green-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        .brown-btn {
+            background-color: #6C4A32;
+            border-bottom: 4px solid #4A3221;
+            transition: all 0.15s ease;
+        }
+        .brown-btn:hover {
+            background-color: #7E573B;
+            transform: translateY(-1px);
+        }
+        .brown-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+        .fr-flag {
+            display: inline-flex;
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            vertical-align: middle;
+            border: 1px solid rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .float-anim {
+            animation: floatSlow 3.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- ========================================== -->
+    <!-- BARRE SUPÉRIEURE PERMANENTE (DRAPEAU 🇫🇷)  -->
+    <!-- ========================================== -->
+    <header class="bg-garden-beige border-b-4 border-garden-lightbrown sticky top-0 z-40 shadow-md">
+        <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <!-- Drapeau de la France + Identité de l'école -->
+            <div class="flex items-center gap-2.5">
+                <div class="fr-flag" title="République Française">
+                    <div class="w-1/3 bg-[#002395] h-full"></div>
+                    <div class="w-1/3 bg-white h-full"></div>
+                    <div class="w-1/3 bg-[#ED2939] h-full"></div>
+                </div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-bold text-garden-brown text-sm md:text-base tracking-wide">Garden School</span>
+                    <span class="text-xs bg-garden-green text-white px-2.5 py-0.5 rounded-full font-medium">3ème Année</span>
+                </div>
+            </div>
+
+            <!-- Professeur + Horloge de Syrie + Statut Cloud -->
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="text-xs md:text-sm font-semibold text-garden-brown flex items-center gap-1.5 bg-garden-cream px-2.5 py-1 rounded-full border border-garden-sand">
+                    <i class="fa-solid fa-chalkboard-user text-garden-green"></i>
+                    <span>M. Krikor Mkhsian</span>
+                </div>
+                <div class="text-xs md:text-sm font-bold text-garden-green bg-white px-2.5 py-1 rounded-full border border-garden-sand shadow-sm flex items-center gap-1.5" title="Heure de Syrie (Damas/Alep)">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="syria-clock">--:--:--</span>
+                </div>
+                <div id="cloud-status" class="w-3 h-3 rounded-full bg-amber-400" title="Connexion à la base de données..."></div>
+            </div>
+        </div>
+
+        <!-- ALERTE 15 MINUTES AVANT FERMETURE (20h45 - 21h00 HEURE DE SYRIE) -->
+        <div id="warning-banner" class="hidden bg-amber-500 text-white text-center py-2 px-4 font-bold text-xs sm:text-sm md:text-base shadow-inner animate-pulse">
+            <i class="fa-solid fa-bell mr-1.5"></i>
+            Attention mon cher élève ! Le site va fermer dans moins de 15 minutes (à 21h00). Pense à terminer ton activité ! 🌙
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- ÉCRAN DE FERMETURE NOCTURNE (21h00 SYRIE)  -->
+    <!-- ========================================== -->
+    <div id="sleep-overlay" class="hidden fixed inset-0 z-50 bg-[#1B263B]/95 backdrop-blur-md flex items-center justify-center p-4 text-white">
+        <div class="max-w-lg w-full bg-[#25344F] border-4 border-amber-300 rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
+            <div class="text-5xl sm:text-6xl mb-4 float-anim">🌙✨😴</div>
+            <div class="flex justify-center mb-3">
+                <div class="fr-flag">
+                    <div class="w-1/3 bg-[#002395] h-full"></div>
+                    <div class="w-1/3 bg-white h-full"></div>
+                    <div class="w-1/3 bg-[#ED2939] h-full"></div>
+                </div>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-amber-300 mb-3">Bonne Nuit !</h2>
+            <p class="text-lg md:text-xl leading-relaxed font-semibold text-blue-100 mb-5">
+                « Il est l'heure de dormir, mon élève studieux... Merci pour tes efforts aujourd'hui ! »
+            </p>
+            <div class="bg-[#1B263B] rounded-2xl p-4 text-xs sm:text-sm text-amber-200 border border-blue-800 mb-6">
+                <i class="fa-solid fa-clock mr-1"></i> Le portail de <strong>Garden School</strong> ferme à <strong>21h00</strong> (Heure de Syrie) pour que tu puisses bien te reposer. À demain ! 🌿
+            </div>
+            <button onclick="window.app.openAdminModalFromSleep()" class="text-xs bg-blue-900/60 hover:bg-blue-800 text-blue-200 px-4 py-2 rounded-xl border border-blue-700 transition">
+                <i class="fa-solid fa-user-shield mr-1"></i> Accès Professeur Krikor Mkhsian (Mode Contrôle)
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BOÎTE DE MESSAGE PERSONNALISÉE (SANS ALERT)-->
+    <!-- ========================================== -->
+    <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white wood-border rounded-3xl max-w-md w-full p-6 text-center animate-bounce-once">
+            <div id="custom-modal-icon" class="text-4xl mb-3">🌿</div>
+            <h3 id="custom-modal-title" class="text-xl font-extrabold text-garden-brown mb-2">Information</h3>
+            <p id="custom-modal-text" class="text-sm font-semibold text-gray-700 mb-6"></p>
+            <button onclick="window.app.closeModal()" class="green-btn text-white font-bold px-8 py-2.5 rounded-2xl">
+                D'accord (موافق)
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- CONTENEUR PRINCIPAL                        -->
+    <!-- ========================================== -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-3 sm:px-4 py-6">
+
+        <!-- LOGO GARDEN SCHOOL (INSPIRÉ DU LOGO OFFICIEL) -->
+        <div class="flex flex-col items-center justify-center mb-7">
+            <div class="relative bg-garden-cream wood-border rounded-[2.2rem] px-6 py-4 text-center max-w-md w-full">
+                <!-- Éléments décoratifs du logo (feuilles, fleurs, crayons, livre) -->
+                <span class="absolute -left-2.5 -top-2.5 text-2xl select-none">🌿</span>
+                <span class="absolute -right-2.5 -top-2.5 text-2xl select-none">🌼</span>
+                <span class="absolute -left-2.5 -bottom-2.5 text-2xl select-none">🖍️</span>
+                <span class="absolute -right-2.5 -bottom-2.5 text-2xl select-none">📖</span>
+
+                <!-- Maison dans l'arbre -->
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-garden-pale border-2 border-garden-green mb-1 shadow-sm">
+                    <i class="fa-solid fa-tree text-2xl text-garden-green"></i>
+                    <i class="fa-solid fa-house-chimney text-lg text-garden-brown -ml-1.5 mt-2"></i>
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-garden-green tracking-wider">
+                    GARDEN <span class="block text-lg sm:text-xl text-garden-brown font-bold -mt-1">School</span>
+                </h1>
+
+                <!-- Slogan traduit en français comme demandé -->
+                <p class="mt-1.5 text-xs sm:text-sm font-bold text-garden-green bg-garden-pale py-1 px-3 rounded-full border border-garden-lightgreen/40 inline-block">
+                    « Apprendre aujourd'hui, diriger demain »
+                </p>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VUE 1 : CONNEXION / INSCRIPTION ÉLÈVE      -->
+        <!-- ========================================== -->
+        <section id="auth-view" class="max-w-md mx-auto">
+            <div class="bg-white wood-border rounded-3xl p-5 sm:p-7">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-5">
+                    <h2 class="text-lg sm:text-xl font-bold text-garden-brown flex items-center gap-2">
+                        <i class="fa-solid fa-user-graduate text-garden-green"></i>
+                        <span>Portail des Élèves</span>
+                    </h2>
+                    <button onclick="window.app.switchView('admin-login-view')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-1.5 rounded-xl border border-amber-400 transition shadow-sm">
+                        <i class="fa-solid fa-crown mr-1 text-amber-600"></i> Espace Prof. Krikor
+                    </button>
+                </div>
+
+                <!-- Onglets Se connecter / Créer un compte -->
+                <div class="grid grid-cols-2 gap-2 bg-garden-cream p-1.5 rounded-2xl mb-5 border border-garden-sand">
+                    <button id="tab-login-btn" onclick="window.app.toggleAuthMode('login')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-garden-green text-white shadow">
+                        Se connecter (دخول)
+                    </button>
+                    <button id="tab-reg-btn" onclick="window.app.toggleAuthMode('register')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm text-garden-brown hover:bg-garden-beige">
+                        Créer un compte (حساب جديد)
+                    </button>
+                </div>
+
+                <div id="auth-alert" class="hidden mb-4 p-3 rounded-xl text-xs sm:text-sm font-bold text-center"></div>
+
+                <!-- Formulaire de Connexion -->
+                <form id="login-form" onsubmit="window.app.handleStudentLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Nom de l'élève (اسم الطالب) :</label>
+                        <input type="text" id="login-username" required placeholder="Ex: Maya, Léo, Georges..." class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand focus:border-garden-green focus:outline-none bg-garden-cream/50 font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Mot de passe (كلمة المرور الخاصة) :</label>
+                        <input type="password" id="login-password" required placeholder="••••••" class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand focus:border-garden-green focus:outline-none bg-garden-cream/50 font-semibold">
+                    </div>
+                    <button type="submit" class="w-full green-btn text-white font-bold py-3.5 rounded-2xl text-base sm:text-lg shadow-md">
+                        Entrer en classe 🇫🇷
+                    </button>
+                </form>
+
+                <!-- Formulaire d'Inscription (Créer son compte) -->
+                <form id="register-form" onsubmit="window.app.handleStudentRegister(event)" class="hidden space-y-4">
+                    <div class="bg-garden-pale border border-garden-lightgreen/50 rounded-xl p-3 text-xs text-garden-green font-bold font-cairo text-right" dir="rtl">
+                        🎁 مفاجأة سارة! عند إنشاء حسابك وتسجيل دخولك لأول مرة، ستحصل فوراً على <strong>نقطتين (2 Points)</strong> هدية!
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Ton Prénom et Nom (اسمك الكامل) :</label>
+                        <input type="text" id="reg-username" required placeholder="Écris ton nom ici..." class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand focus:border-garden-green focus:outline-none bg-garden-cream/50 font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Choisis ton mot de passe (اختر كلمة مرورك) :</label>
+                        <input type="text" id="reg-password" required placeholder="Choisis un mot de passe secret" class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand focus:border-garden-green focus:outline-none bg-garden-cream/50 font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Classe (الصف) :</label>
+                        <input type="text" value="3ème Année Primaire (الصف الثالث الابتدائي)" disabled class="w-full px-4 py-2.5 rounded-xl border-2 border-garden-sand bg-garden-beige text-garden-brown font-bold text-xs sm:text-sm">
+                    </div>
+                    <button type="submit" class="w-full brown-btn text-white font-bold py-3.5 rounded-2xl text-base sm:text-lg shadow-md">
+                        Créer mon compte & Gagner +2 Pts ⭐
+                    </button>
+                </form>
+
+                <!-- Comptes de démonstration rapide -->
+                <div class="mt-6 pt-4 border-t border-garden-beige text-center">
+                    <p class="text-xs font-bold text-gray-500 mb-2 font-cairo" dir="rtl">للتجربة السريعة كطالب (أو يمكنك إنشاء حساب جديد):</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <button onclick="window.app.quickStudentDemo('Maya', '456')" class="text-xs bg-garden-cream hover:bg-garden-beige text-garden-brown font-bold px-3 py-1.5 rounded-xl border border-garden-sand">
+                            👧 الدخول كـ Maya
+                        </button>
+                        <button onclick="window.app.quickStudentDemo('Léo', '123')" class="text-xs bg-garden-cream hover:bg-garden-beige text-garden-brown font-bold px-3 py-1.5 rounded-xl border border-garden-sand">
+                            👦 الدخول كـ Léo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VUE 2 : TABLEAU DE BORD ÉLÈVE              -->
+        <!-- ========================================== -->
+        <section id="student-view" class="hidden space-y-6">
+
+            <!-- Barre de Bienvenue + Points + Déconnexion -->
+            <div class="bg-white wood-border rounded-3xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+                    <div class="w-16 h-16 rounded-2xl bg-garden-pale border-2 border-garden-green flex items-center justify-center text-3xl shadow-inner shrink-0">
+                        🎒
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-garden-green" id="welcome-student-name">
+                                Bienvenue !
+                            </h2>
+                            <div class="fr-flag">
+                                <div class="w-1/3 bg-[#002395] h-full"></div>
+                                <div class="w-1/3 bg-white h-full"></div>
+                                <div class="w-1/3 bg-[#ED2939] h-full"></div>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-garden-brown font-semibold mt-0.5">
+                            Élève de 3ème Année Primaire • Classe de M. Krikor Mkhsian
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Compteur de Points et Déconnexion -->
+                <div class="flex items-center gap-3 flex-wrap justify-center">
+                    <div class="bg-amber-50 border-2 border-amber-400 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-sm">
+                        <span class="text-3xl">⭐</span>
+                        <div>
+                            <div class="text-[11px] font-bold text-amber-800 uppercase">Mes Points</div>
+                            <div class="text-2xl font-extrabold text-amber-600" id="student-points-badge">0</div>
+                        </div>
+                    </div>
+
+                    <button onclick="window.app.handleStudentLogout()" class="bg-red-50 hover:bg-red-100 text-red-700 border-2 border-red-200 font-bold px-4 py-3 rounded-2xl text-xs sm:text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Déconnexion</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bannière de Notification Cadeau / Points -->
+            <div id="student-toast" class="hidden bg-garden-green text-white p-4 rounded-2xl font-bold text-center shadow-lg border-2 border-garden-lightgreen"></div>
+
+            <!-- TABLEAU D'HONNEUR MENSUEL (TOP 3 ÉLÈVES - DERNIER DIMANCHE DU MOIS) -->
+            <div id="leaderboard-section" class="bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 border-4 border-amber-300 rounded-3xl p-4 sm:p-5 shadow-md">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 text-center sm:text-left flex-col sm:flex-row">
+                        <span class="text-4xl">🏆</span>
+                        <div>
+                            <h3 class="text-base sm:text-lg font-extrabold text-amber-900">
+                                Tableau d'Honneur du Mois (لوحة شرف أبطال الشهر)
+                            </h3>
+                            <p class="text-xs text-amber-800 font-semibold" id="leaderboard-subtitle">
+                                Les 3 meilleurs élèves du mois (affiché le dernier dimanche de chaque mois)
+                            </p>
+                        </div>
+                    </div>
+                    <div id="top3-container" class="flex flex-wrap justify-center gap-2.5">
+                        <!-- Injecté dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- LES 4 SECTIONS PRINCIPALES EN FRANÇAIS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                <!-- 1. Révisions & Cours -->
+                <div onclick="window.app.openSection('revisions')" class="cursor-pointer bg-white wood-card rounded-3xl p-5 text-center card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-3xl mb-3 shadow-sm">
+                            📚
+                        </div>
+                        <h3 class="text-lg font-extrabold text-garden-brown mb-1">Révisions & Résumés</h3>
+                        <p class="text-xs text-gray-600 font-cairo font-semibold">المراجعات والملخصات والجداول</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-garden-beige flex items-center justify-between text-xs font-bold text-garden-green">
+                        <span>Ouvrir les leçons</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <!-- 2. Tests & Quiz -->
+                <div onclick="window.app.openSection('tests')" class="cursor-pointer bg-white wood-card rounded-3xl p-5 text-center card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-3xl mb-3 shadow-sm">
+                            📝
+                        </div>
+                        <h3 class="text-lg font-extrabold text-garden-brown mb-1">Tests & Quiz</h3>
+                        <p class="text-xs text-gray-600 font-cairo font-semibold">الاختبارات القصيرة (+1 نقطة لكل إجابة صحيحة)</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-garden-beige flex items-center justify-between text-xs font-bold text-blue-700">
+                        <span>Gagner des points ⭐</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <!-- 3. Révisions des Vacances (Vendredi & Samedi uniquement) -->
+                <div onclick="window.app.openSection('vacances')" class="cursor-pointer bg-white wood-card rounded-3xl p-5 text-center card-hover flex flex-col justify-between relative overflow-hidden">
+                    <div id="vacances-lock-badge" class="absolute top-3 right-3 text-[11px] px-2.5 py-0.5 rounded-full font-bold"></div>
+                    <div>
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl mb-3 shadow-sm">
+                            🏖️
+                        </div>
+                        <h3 class="text-lg font-extrabold text-garden-brown mb-1">Révisions des Vacances</h3>
+                        <p class="text-xs text-gray-600 font-cairo font-semibold">مراجعات يوم العطل (تفتح الجمعة والسبت فقط)</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-garden-beige flex items-center justify-between text-xs font-bold text-amber-700">
+                        <span>+1 Pt d'entrée + Quiz ⭐</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <!-- 4. Examens Blancs -->
+                <div onclick="window.app.openSection('examens')" class="cursor-pointer bg-white wood-card rounded-3xl p-5 text-center card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-3xl mb-3 shadow-sm">
+                            🎯
+                        </div>
+                        <h3 class="text-lg font-extrabold text-garden-brown mb-1">Examens Blancs</h3>
+                        <p class="text-xs text-gray-600 font-cairo font-semibold">الاختبارات التجريبية قبل المذاكرة أو الامتحان</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-garden-beige flex items-center justify-between text-xs font-bold text-purple-700">
+                        <span>S'entraîner (+Points)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONE D'AFFICHAGE DU CONTENU DE LA SECTION SÉLECTIONNÉE -->
+            <div id="section-content-area" class="hidden bg-white wood-border rounded-3xl p-5 sm:p-7">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-garden-beige pb-4 mb-6">
+                    <h3 id="section-title" class="text-xl sm:text-2xl font-extrabold text-garden-green"></h3>
+                    <button onclick="window.app.closeSection()" class="bg-garden-beige hover:bg-garden-sand text-garden-brown font-bold px-4 py-2 rounded-xl text-xs sm:text-sm">
+                        <i class="fa-solid fa-xmark mr-1"></i> Fermer
+                    </button>
+                </div>
+                <div id="section-body"></div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VUE 3 : CONNEXION PROFESSEUR KRIKOR        -->
+        <!-- ========================================== -->
+        <section id="admin-login-view" class="hidden max-w-md mx-auto">
+            <div class="bg-white wood-border rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-garden-brown">
+                        🔐 Accès Prof. Krikor Mkhsian
+                    </h2>
+                    <button onclick="window.app.switchView('auth-view')" class="text-xs bg-garden-beige px-3 py-1.5 rounded-xl font-bold">
+                        Retour Élèves
+                    </button>
+                </div>
+                <div class="bg-amber-50 border border-amber-300 rounded-2xl p-3 mb-4 text-xs font-cairo text-amber-900 font-bold text-right" dir="rtl">
+                    أهلاً بك يا أستاذ كريكور! بيانات الدخول جاهزة، فقط اضغط على الزر الأخضر بالأسفل للدخول إلى لوحة التحكم الشاملة الخاصة بك.
+                </div>
+                <form onsubmit="window.app.handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Identifiant Administrateur :</label>
+                        <input type="text" id="admin-user" value="krikor" required class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand bg-garden-cream font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-garden-brown mb-1">Mot de passe :</label>
+                        <input type="password" id="admin-pass" value="garden2026" required class="w-full px-4 py-3 rounded-xl border-2 border-garden-sand bg-garden-cream font-bold">
+                    </div>
+                    <button type="submit" class="w-full green-btn text-white font-bold py-3.5 rounded-2xl text-base sm:text-lg">
+                        Ouvrir le Panneau de Contrôle (دخول لوحة التحكم)
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VUE 4 : PANNEAU DE CONTRÔLE PROF. KRIKOR   -->
+        <!-- ========================================== -->
+        <section id="admin-dashboard-view" class="hidden space-y-6 font-cairo" dir="rtl">
+
+            <!-- En-tête Admin -->
+            <div class="bg-white wood-border rounded-3xl p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-garden-green flex items-center gap-2">
+                        <i class="fa-solid fa-crown text-amber-500"></i>
+                        <span>لوحة التحكم الشاملة - الأستاذ كريكور مخسيان</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-garden-brown mt-1 font-semibold">
+                        التحكم الكامل بطلاب الصف الثالث الابتدائي، معرفة كلمات المرور، النقاط، الإجابات الخاطئة، وإضافة المراجعات والاختبارات.
+                    </p>
+                </div>
+                <button onclick="window.app.switchView('auth-view')" class="brown-btn text-white font-bold px-5 py-2.5 rounded-2xl text-xs sm:text-sm">
+                    <i class="fa-solid fa-right-from-bracket ml-1"></i> العودة لواجهة الطلاب
+                </button>
+            </div>
+
+            <!-- شريط أدوات المحاكاة والتجربة الفورية للأستاذ كريكور -->
+            <div class="bg-amber-50 border-2 border-amber-400 rounded-3xl p-4 sm:p-5">
+                <h3 class="font-extrabold text-amber-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>أزرار التجربة الفورية للأستاذ كريكور (لتجربة ميزات الموقع في أي وقت):</span>
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs sm:text-sm">
+                    <button onclick="window.app.toggleSimOption('forceWeekend')" class="p-3 rounded-2xl font-bold border-2 border-amber-300 bg-white hover:bg-amber-100 transition text-right shadow-sm">
+                        🏖️ <strong>فتح قسم العطل (الجمعة/السبت):</strong>
+                        <div id="sim-weekend-state" class="mt-1 text-amber-800">تلقائي</div>
+                    </button>
+                    <button onclick="window.app.toggleSimOption('forceLastSunday')" class="p-3 rounded-2xl font-bold border-2 border-amber-300 bg-white hover:bg-amber-100 transition text-right shadow-sm">
+                        🏆 <strong>لوحة الشرف الشهرية (الأحد الأخير):</strong>
+                        <div id="sim-sunday-state" class="mt-1 text-green-700">ظاهرة الآن</div>
+                    </button>
+                    <button onclick="window.app.toggleSimOption('forceWarning')" class="p-3 rounded-2xl font-bold border-2 border-amber-300 bg-white hover:bg-amber-100 transition text-right shadow-sm">
+                        ⏰ <strong>تجربة تنبيه الـ 15 دقيقة (8:45 م):</strong>
+                        <div id="sim-warn-state" class="mt-1 text-gray-600">إيقاف</div>
+                    </button>
+                    <button onclick="window.app.toggleSimOption('forceSleep')" class="p-3 rounded-2xl font-bold border-2 border-amber-300 bg-white hover:bg-amber-100 transition text-right shadow-sm">
+                        🌙 <strong>تجربة إغلاق الساعة 9:00 مساءً:</strong>
+                        <div id="sim-sleep-state" class="mt-1 text-gray-600">تلقائي</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- التبويبات الإدارية -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="window.app.switchAdminTab('students')" id="adm-tab-students" class="px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-garden-green text-white shadow">
+                    👦👧 الطلاب وكلمات المرور والنقاط
+                </button>
+                <button onclick="window.app.switchAdminTab('logs')" id="adm-tab-logs" class="px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-white text-garden-brown border-2 border-garden-sand">
+                    🕒 سجل الدخول والنشاط بالتفصيل
+                </button>
+                <button onclick="window.app.switchAdminTab('revisions')" id="adm-tab-revisions" class="px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-white text-garden-brown border-2 border-garden-sand">
+                    📚 إضافة مراجعة (نص / جدول / رابط / ملف)
+                </button>
+                <button onclick="window.app.switchAdminTab('quizzes')" id="adm-tab-quizzes" class="px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-white text-garden-brown border-2 border-garden-sand">
+                    📝 إضافة وحذف الأسئلة والاختبارات
+                </button>
+            </div>
+
+            <!-- 1. قسم متابعة الطلاب وكلمات المرور -->
+            <div id="adm-panel-students" class="bg-white wood-border rounded-3xl p-5 sm:p-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold text-garden-brown">قائمة طلاب الصف الثالث الابتدائي المسجلين</h3>
+                    <span class="text-xs bg-garden-pale text-garden-green font-bold px-3 py-1 rounded-full">
+                        تظهر هنا كلمة المرور الخاصة بكل طالب مع نقاطه وعدد إجاباته الصحيحة والخاطئة
+                    </span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="bg-garden-beige text-garden-brown text-xs sm:text-sm border-b-2 border-garden-lightbrown">
+                                <th class="p-3">اسم الطالب</th>
+                                <th class="p-3">كلمة المرور الخاصة به</th>
+                                <th class="p-3">مجموع النقاط ⭐</th>
+                                <th class="p-3">إجابات صحيحة ✅</th>
+                                <th class="p-3">إجابات خاطئة ❌</th>
+                                <th class="p-3">آخر تسجيل دخول</th>
+                                <th class="p-3">تحكم سريع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-students-tbody" class="divide-y divide-garden-beige text-xs sm:text-sm font-semibold"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. قسم سجل النشاط والدخول -->
+            <div id="adm-panel-logs" class="hidden bg-white wood-border rounded-3xl p-5 sm:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold text-garden-brown">سجل حركة الطلاب (وقت وتاريخ الدخول، النقاط، الإجابات)</h3>
+                    <button onclick="window.app.clearLogs()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded-xl">مسح السجل</button>
+                </div>
+                <div id="admin-logs-list" class="space-y-2 max-h-96 overflow-y-auto pl-1"></div>
+            </div>
+
+            <!-- 3. قسم إضافة المراجعات (نص، جدول، رابط، ملف) -->
+            <div id="adm-panel-revisions" class="hidden bg-white wood-border rounded-3xl p-5 sm:p-6 space-y-6">
+                <h3 class="text-lg sm:text-xl font-extrabold text-garden-brown">إضافة ملخص أو مراجعة جديدة للطلاب</h3>
+                <form onsubmit="window.app.handleAddRevision(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-garden-cream p-5 rounded-2xl border border-garden-sand">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">عنوان الدرس / المراجعة:</label>
+                        <input type="text" id="rev-title" required placeholder="مثال: Les Salutations / المفردات" class="w-full px-3 py-2.5 rounded-xl border border-garden-sand">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">نوع المحتوى المضاف:</label>
+                        <select id="rev-type" onchange="window.app.toggleRevisionTypeFields()" class="w-full px-3 py-2.5 rounded-xl border border-garden-sand bg-white font-bold">
+                            <option value="text">📝 نص وشرح ملخص</option>
+                            <option value="table">📊 جدول مفردات (فرنسي - عربي)</option>
+                            <option value="link">🔗 رابط خارجي (فيديو / نشاط)</option>
+                            <option value="file">📎 إرفاق ملف أو ورقة عمل</option>
+                        </select>
+                    </div>
+
+                    <div id="rev-field-text" class="md:col-span-2">
+                        <label class="block text-sm font-bold mb-1">محتوى الشرح أو الملخص:</label>
+                        <textarea id="rev-content" rows="3" placeholder="اكتب الملخص هنا..." class="w-full px-3 py-2 rounded-xl border border-garden-sand"></textarea>
+                    </div>
+
+                    <div id="rev-field-table" class="hidden md:col-span-2">
+                        <label class="block text-sm font-bold mb-1">اكتب كل كلمة ومعناها في سطر مفصولين بعلامة ( - ):</label>
+                        <textarea id="rev-table-data" rows="4" placeholder="Bonjour - صباح الخير&#10;Merci - شكراً&#10;L'école - المدرسة" class="w-full px-3 py-2 rounded-xl border border-garden-sand"></textarea>
+                    </div>
+
+                    <div id="rev-field-link" class="hidden md:col-span-2">
+                        <label class="block text-sm font-bold mb-1">الرابط (URL):</label>
+                        <input type="url" id="rev-link-url" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-garden-sand">
+                    </div>
+
+                    <div id="rev-field-file" class="hidden md:col-span-2">
+                        <label class="block text-sm font-bold mb-1">اختر ملفاً صغير الحجم من جهازك (صورة أو مستند):</label>
+                        <input type="file" id="rev-file-input" class="w-full px-3 py-2 rounded-xl border border-garden-sand bg-white">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <button type="submit" class="green-btn text-white font-bold px-6 py-3 rounded-xl text-sm">
+                            <i class="fa-solid fa-plus ml-1"></i> نشر المراجعة للطلاب
+                        </button>
+                    </div>
+                </form>
+
+                <div>
+                    <h4 class="font-bold text-garden-brown mb-3">المراجعات المنشورة حالياً (يمكنك حذف أي منها):</h4>
+                    <div id="admin-revisions-list" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- 4. قسم إضافة الأسئلة (اختيار من متعدد + صح أو خطأ) -->
+            <div id="adm-panel-quizzes" class="hidden bg-white wood-border rounded-3xl p-5 sm:p-6 space-y-6">
+                <h3 class="text-lg sm:text-xl font-extrabold text-garden-brown">إضافة سؤال جديد (اختبارات / مراجعات العطل / اختبارات تجريبية)</h3>
+                <form onsubmit="window.app.handleAddQuestion(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-garden-cream p-5 rounded-2xl border border-garden-sand">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">القسم:</label>
+                        <select id="q-category" class="w-full px-3 py-2.5 rounded-xl border border-garden-sand bg-white font-bold">
+                            <option value="tests">📝 Tests & Quiz (الاختبارات)</option>
+                            <option value="vacances">🏖️ Révisions des Vacances (مراجعات العطل)</option>
+                            <option value="examens">🎯 Examens Blancs (اختبارات تجريبية)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">نوع السؤال:</label>
+                        <select id="q-type" onchange="window.app.toggleQuestionTypeFields()" class="w-full px-3 py-2.5 rounded-xl border border-garden-sand bg-white font-bold">
+                            <option value="mcq">اختيارات متعددة (QCM)</option>
+                            <option value="tf">صح أو خطأ (Vrai / Faux)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">نص السؤال (بالفرنسية):</label>
+                        <input type="text" id="q-text" required placeholder="Ex: Comment dit-on 'تفاحة' en français ?" class="w-full px-3 py-2.5 rounded-xl border border-garden-sand">
+                    </div>
+
+                    <!-- خيارات الاختيار من متعدد -->
+                    <div id="q-mcq-options" class="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold mb-1">الخيار الأول (1):</label>
+                            <input type="text" id="q-opt-0" placeholder="Une pomme" class="w-full px-3 py-2 rounded-xl border border-garden-sand">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">الخيار الثاني (2):</label>
+                            <input type="text" id="q-opt-1" placeholder="Une banane" class="w-full px-3 py-2 rounded-xl border border-garden-sand">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">الخيار الثالث (3):</label>
+                            <input type="text" id="q-opt-2" placeholder="Une orange" class="w-full px-3 py-2 rounded-xl border border-garden-sand">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-3 flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-1">حدد الإجابة الصحيحة:</label>
+                            <select id="q-correct" class="px-4 py-2 rounded-xl border border-garden-sand bg-white font-bold">
+                                <option value="0">الخيار الأول (1) / Vrai (صح)</option>
+                                <option value="1">الخيار الثاني (2) / Faux (خطأ)</option>
+                                <option value="2" id="q-correct-opt3">الخيار الثالث (3)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="green-btn text-white font-bold px-6 py-3 rounded-xl text-sm">
+                            <i class="fa-solid fa-plus ml-1"></i> إضافة السؤال للموقع
+                        </button>
+                    </div>
+                </form>
+
+                <div>
+                    <h4 class="font-bold text-garden-brown mb-3">جميع الأسئلة الحالية في الموقع (يمكنك حذف أي سؤال):</h4>
+                    <div id="admin-questions-list" class="space-y-2"></div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- PIED DE PAGE AVEC DRAPEAU FRANÇAIS         -->
+    <!-- ========================================== -->
+    <footer class="bg-garden-beige border-t-4 border-garden-lightbrown py-4 mt-10 text-center text-xs sm:text-sm text-garden-brown font-semibold">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <div class="fr-flag">
+                    <div class="w-1/3 bg-[#002395] h-full"></div>
+                    <div class="w-1/3 bg-white h-full"></div>
+                    <div class="w-1/3 bg-[#ED2939] h-full"></div>
+                </div>
+                <span>Garden School • « Apprendre aujourd'hui, diriger demain »</span>
+            </div>
+            <div>Supervisé par <strong>M. Krikor Mkhsian</strong> (Professeur de Français - 3ème Année)</div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- LOGIQUE APPLICATIVE & SYNCHRONISATION CLOUD-->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // État initial par défaut (En mémoire + Synchronisé avec Firestore)
+        const defaultPortalState = {
+            sim: {
+                forceWeekend: false,
+                forceLastSunday: true,
+                forceWarning: false,
+                forceSleep: false
+            },
+            students: [
+                {
+                    id: 'st_1',
+                    username: 'Maya',
+                    password: '456',
+                    points: 19,
+                    correctCount: 16,
+                    wrongCount: 1,
+                    firstLoginDone: true,
+                    lastVacationBonusDate: '',
+                    lastLogin: '2026-10-15 17:10:00',
+                    answeredIds: []
+                },
+                {
+                    id: 'st_2',
+                    username: 'Léo',
+                    password: '123',
+                    points: 14,
+                    correctCount: 11,
+                    wrongCount: 2,
+                    firstLoginDone: true,
+                    lastVacationBonusDate: '',
+                    lastLogin: '2026-10-15 16:30:00',
+                    answeredIds: []
+                },
+                {
+                    id: 'st_3',
+                    username: 'Georges',
+                    password: '789',
+                    points: 11,
+                    correctCount: 9,
+                    wrongCount: 3,
+                    firstLoginDone: true,
+                    lastVacationBonusDate: '',
+                    lastLogin: '2026-10-14 18:05:00',
+                    answeredIds: []
+                }
+            ],
+            revisions: [
+                {
+                    id: 'rev_1',
+                    title: 'Les Salutations en Français (التحيات بالفرنسية)',
+                    type: 'table',
+                    content: 'Bonjour - صباح الخير\nBonsoir - مساء الخير\nComment ça va ? - كيف حالك؟\nTrès bien, merci - بخير، شكراً\nAu revoir - إلى اللقاء'
+                },
+                {
+                    id: 'rev_2',
+                    title: 'Les Jours de la Semaine (أيام الأسبوع)',
+                    type: 'text',
+                    content: 'En français, les 7 jours de la semaine sont : Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi et Dimanche. N\'oublie pas que Vendredi et Samedi sont nos jours de vacances !'
+                }
+            ],
+            questions: [
+                {
+                    id: 'q_1',
+                    category: 'tests',
+                    type: 'mcq',
+                    text: 'Que dit-on le matin en arrivant à Garden School ?',
+                    options: ['Bonjour !', 'Bonne nuit !', 'Au revoir !'],
+                    correct: 0
+                },
+                {
+                    id: 'q_2',
+                    category: 'tests',
+                    type: 'tf',
+                    text: 'Le mot « Pomme » veut dire « تفاحة » en arabe.',
+                    options: ['Vrai (صح)', 'Faux (خطأ)'],
+                    correct: 0
+                },
+                {
+                    id: 'q_3',
+                    category: 'vacances',
+                    type: 'mcq',
+                    text: 'Quelle est la couleur du ciel quand il fait beau ?',
+                    options: ['Bleu', 'Vert', 'Rouge'],
+                    correct: 0
+                },
+                {
+                    id: 'q_4',
+                    category: 'vacances',
+                    type: 'tf',
+                    text: 'Le drapeau de la France est Bleu, Blanc et Rouge.',
+                    options: ['Vrai (صح)', 'Faux (خطأ)'],
+                    correct: 0
+                },
+                {
+                    id: 'q_5',
+                    category: 'examens',
+                    type: 'mcq',
+                    text: 'Complète la phrase : « Je _____ un élève de 3ème année. »',
+                    options: ['suis', 'es', 'est'],
+                    correct: 0
+                },
+                {
+                    id: 'q_6',
+                    category: 'examens',
+                    type: 'tf',
+                    text: 'Deux plus trois font cinq (2 + 3 = 5).',
+                    options: ['Vrai (صح)', 'Faux (خطأ)'],
+                    correct: 0
+                }
+            ],
+            logs: [
+                { time: '2026-10-15 17:10:00', student: 'Maya', action: 'Connexion au portail et révision du cours.' },
+                { time: '2026-10-15 16:30:00', student: 'Léo', action: 'A obtenu +1 point dans Tests & Quiz.' }
+            ]
+        };
+
+        let state = JSON.parse(JSON.stringify(defaultPortalState));
+        let currentStudentId = null;
+        let activeCategory = null;
+        let pendingFileBase64 = null;
+        let pendingFileName = null;
+
+        // Variables Firebase
+        let firestoreDb = null;
+        let firebaseUser = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'garden-school-krikor';
+
+        // Initialisation de Firebase (Respect strict des règles Firestore)
+        async function initCloudStorage() {
+            try {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                    setCloudBadge('local');
+                    return;
+                }
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                firestoreDb = getFirestore(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                firebaseUser = auth.currentUser;
+                if (!firebaseUser) return;
+
+                const portalDocRef = doc(firestoreDb, 'artifacts', appId, 'public', 'data', 'school_portal', 'main_state');
+                const sessionDocRef = doc(firestoreDb, 'artifacts', appId, 'users', firebaseUser.uid, 'session', 'current_student');
+
+                // Vérifier ou initialiser l'état global de l'école
+                const snap = await getDoc(portalDocRef);
+                if (!snap.exists()) {
+                    await setDoc(portalDocRef, state);
+                } else {
+                    const data = snap.data();
+                    if (data && data.students) {
+                        state = data;
+                    }
+                }
+
+                // Restaurer la session automatique de l'élève sur son appareil
+                const sessionSnap = await getDoc(sessionDocRef);
+                if (sessionSnap.exists() && sessionSnap.data().studentId) {
+                    const savedId = sessionSnap.data().studentId;
+                    const found = state.students.find(s => s.id === savedId);
+                    if (found) {
+                        currentStudentId = savedId;
+                        switchView('student-view');
+                        renderStudentDashboard();
+                    }
+                }
+
+                // Écoute en temps réel des mises à jour (Questions, Points, Logs)
+                onSnapshot(portalDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        state = docSnap.data();
+                        refreshActiveScreens();
+                    }
+                }, (err) => {
+                    console.error("Erreur de synchronisation:", err);
+                });
+
+                setCloudBadge('online');
+            } catch (e) {
+                console.error("Mode autonome activé:", e);
+                setCloudBadge('local');
+            }
+        }
+
+        function setCloudBadge(status) {
+            const el = document.getElementById('cloud-status');
+            if (!el) return;
+            if (status === 'online') {
+                el.className = 'w-3 h-3 rounded-full bg-green-500 shadow';
+                el.title = 'Synchronisé en direct';
+            } else {
+                el.className = 'w-3 h-3 rounded-full bg-emerald-400';
+                el.title = 'Prêt';
+            }
+        }
+
+        async function saveState() {
+            refreshActiveScreens();
+            if (!firestoreDb || !firebaseUser) return;
+            try {
+                const portalDocRef = doc(firestoreDb, 'artifacts', appId, 'public', 'data', 'school_portal', 'main_state');
+                await setDoc(portalDocRef, state);
+            } catch (e) {
+                console.error("Erreur lors de la sauvegarde:", e);
+            }
+        }
+
+        async function saveStudentSession(studentId) {
+            if (!firestoreDb || !firebaseUser) return;
+            try {
+                const sessionDocRef = doc(firestoreDb, 'artifacts', appId, 'users', firebaseUser.uid, 'session', 'current_student');
+                await setDoc(sessionDocRef, { studentId: studentId || null });
+            } catch (e) {
+                console.error("Erreur de session:", e);
+            }
+        }
+
+        function refreshActiveScreens() {
+            if (!document.getElementById('student-view').classList.contains('hidden')) {
+                renderStudentDashboard();
+            }
+            if (!document.getElementById('admin-dashboard-view').classList.contains('hidden')) {
+                renderAdminAll();
+            }
+            checkSyriaTimeSchedule();
+        }
+
+        // ==========================================
+        // GESTION DE L'HEURE DE SYRIE (ASIA/DAMASCUS)
+        // ==========================================
+        function getSyriaParts() {
+            const now = new Date();
+            const fmt = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Damascus',
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                weekday: 'short', hour12: false
+            });
+            const parts = fmt.formatToParts(now);
+            const map = {};
+            parts.forEach(p => map[p.type] = p.value);
+
+            const hour = parseInt(map.hour, 10) % 24;
+            const minute = parseInt(map.minute, 10);
+            const year = parseInt(map.year, 10);
+            const month = parseInt(map.month, 10);
+            const day = parseInt(map.day, 10);
+            const weekday = map.weekday;
+
+            return {
+                hour, minute, year, month, day, weekday,
+                dateKey: `${map.year}-${map.month}-${map.day}`,
+                timeStr: `${String(hour).padStart(2,'0')}:${map.minute}:${map.second}`,
+                formattedFull: `${map.year}-${map.month}-${map.day} ${String(hour).padStart(2,'0')}:${map.minute}:${map.second}`
+            };
+        }
+
+        function isSyriaWeekend() {
+            if (state.sim && state.sim.forceWeekend) return true;
+            const p = getSyriaParts();
+            return (p.weekday === 'Fri' || p.weekday === 'Sat');
+        }
+
+        function isLastSundayOfMonth() {
+            if (state.sim && state.sim.forceLastSunday) return true;
+            const p = getSyriaParts();
+            if (p.weekday !== 'Sun') return false;
+            const daysInMonth = new Date(p.year, p.month, 0).getDate();
+            return (daysInMonth - p.day) < 7;
+        }
+
+        function checkSyriaTimeSchedule() {
+            const p = getSyriaParts();
+            const clockEl = document.getElementById('syria-clock');
+            if (clockEl) clockEl.textContent = p.timeStr + ' (Syrie)';
+
+            // Alerte 15 minutes avant 21h00 -> entre 20h45 et 20h59
+            const isWarningWindow = (p.hour === 20 && p.minute >= 45) || (state.sim && state.sim.forceWarning);
+            const warnBanner = document.getElementById('warning-banner');
+            if (warnBanner) {
+                if (isWarningWindow) warnBanner.classList.remove('hidden');
+                else warnBanner.classList.add('hidden');
+            }
+
+            // Fermeture à 21h00 (Heure de Syrie)
+            const isSleepWindow = (p.hour >= 21 || p.hour < 6) || (state.sim && state.sim.forceSleep);
+            const sleepOverlay = document.getElementById('sleep-overlay');
+            const adminVisible = !document.getElementById('admin-dashboard-view').classList.contains('hidden') ||
+                                 !document.getElementById('admin-login-view').classList.contains('hidden');
+
+            if (sleepOverlay) {
+                if (isSleepWindow && !adminVisible) sleepOverlay.classList.remove('hidden');
+                else sleepOverlay.classList.add('hidden');
+            }
+        }
+
+        // ==========================================
+        // NAVIGATION ET MODALES
+        // ==========================================
+        function showModal(title, text, icon = '🌿') {
+            document.getElementById('custom-modal-title').textContent = title;
+            document.getElementById('custom-modal-text').textContent = text;
+            document.getElementById('custom-modal-icon').textContent = icon;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function switchView(viewId) {
+            ['auth-view', 'student-view', 'admin-login-view', 'admin-dashboard-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+            checkSyriaTimeSchedule();
+        }
+
+        function addLog(studentName, actionText) {
+            const nowStr = getSyriaParts().formattedFull;
+            if (!state.logs) state.logs = [];
+            state.logs.unshift({
+                time: nowStr,
+                student: studentName,
+                action: actionText
+            });
+            if (state.logs.length > 100) state.logs.pop();
+        }
+
+        // ==========================================
+        // AUTHENTIFICATION ÉLÈVE
+        // ==========================================
+        function toggleAuthMode(mode) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const tabLogin = document.getElementById('tab-login-btn');
+            const tabReg = document.getElementById('tab-reg-btn');
+            document.getElementById('auth-alert').classList.add('hidden');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabLogin.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-garden-green text-white shadow';
+                tabReg.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm text-garden-brown hover:bg-garden-beige';
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                tabReg.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-garden-brown text-white shadow';
+                tabLogin.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm text-garden-brown hover:bg-garden-beige';
+            }
+        }
+
+        function showAuthAlert(msg, isError = true) {
+            const el = document.getElementById('auth-alert');
+            el.textContent = msg;
+            el.className = `mb-4 p-3 rounded-xl text-xs sm:text-sm font-bold text-center ${isError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-800 border border-green-300'}`;
+            el.classList.remove('hidden');
+        }
+
+        async function handleStudentRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (!username || !password) return;
+
+            const exists = state.students.find(s => s.username.toLowerCase() === username.toLowerCase());
+            if (exists) {
+                showAuthAlert('Ce nom est déjà inscrit ! Connecte-toi directement avec ton mot de passe.');
+                return;
+            }
+
+            const newStudent = {
+                id: 'st_' + Date.now(),
+                username,
+                password,
+                points: 2, // +2 points pour la toute première connexion !
+                correctCount: 0,
+                wrongCount: 0,
+                firstLoginDone: true,
+                lastVacationBonusDate: '',
+                lastLogin: getSyriaParts().formattedFull,
+                answeredIds: []
+            };
+
+            state.students.push(newStudent);
+            addLog(username, 'Création de compte et première connexion (+2 points de bienvenue offerts ⭐)');
+            await saveState();
+            await loginStudentSession(newStudent.id, '🎁 Félicitations ! Tu as reçu +2 Points pour ta première expérience sur le portail !');
+        }
+
+        async function handleStudentLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            const student = state.students.find(s => s.username.toLowerCase() === username.toLowerCase() && s.password === password);
+            if (!student) {
+                showAuthAlert('Nom ou mot de passe incorrect. Vérifie bien ou crée un nouveau compte !');
+                return;
+            }
+
+            let bonusMsg = null;
+            if (!student.firstLoginDone) {
+                student.points += 2;
+                student.firstLoginDone = true;
+                bonusMsg = '🎁 Bienvenue pour la première fois ! Tu gagnes +2 Points !';
+                addLog(student.username, 'Première connexion (+2 points offerts)');
+            } else {
+                addLog(student.username, 'Connexion au portail');
+            }
+
+            student.lastLogin = getSyriaParts().formattedFull;
+            await saveState();
+            await loginStudentSession(student.id, bonusMsg);
+        }
+
+        function quickStudentDemo(name, pass) {
+            toggleAuthMode('login');
+            document.getElementById('login-username').value = name;
+            document.getElementById('login-password').value = pass;
+            document.getElementById('login-form').dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+
+        async function loginStudentSession(studentId, toastMessage = null) {
+            currentStudentId = studentId;
+            await saveStudentSession(studentId);
+            switchView('student-view');
+            renderStudentDashboard();
+            if (toastMessage) {
+                showStudentToast(toastMessage);
+            }
+        }
+
+        async function handleStudentLogout() {
+            const st = getCurrentStudent();
+            if (st) {
+                addLog(st.username, 'Déconnexion du portail');
+                await saveState();
+            }
+            currentStudentId = null;
+            await saveStudentSession(null);
+            closeSection();
+            switchView('auth-view');
+        }
+
+        function getCurrentStudent() {
+            return state.students.find(s => s.id === currentStudentId);
+        }
+
+        function showStudentToast(msg) {
+            const toast = document.getElementById('student-toast');
+            toast.textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 6500);
+        }
+
+        // ==========================================
+        // TABLEAU DE BORD ÉLÈVE & ACTIVITÉS
+        // ==========================================
+        function renderStudentDashboard() {
+            const st = getCurrentStudent();
+            if (!st) return switchView('auth-view');
+
+            document.getElementById('welcome-student-name').textContent = `Bienvenue, ${st.username} !`;
+            document.getElementById('student-points-badge').textContent = st.points;
+
+            const lockBadge = document.getElementById('vacances-lock-badge');
+            if (isSyriaWeekend()) {
+                lockBadge.textContent = '🔓 Ouvert (Ven/Sam)';
+                lockBadge.className = 'absolute top-3 right-3 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-green-100 text-green-800 border border-green-300';
+            } else {
+                lockBadge.textContent = '🔒 Ven & Sam';
+                lockBadge.className = 'absolute top-3 right-3 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-300';
+            }
+
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('top3-container');
+            const subtitle = document.getElementById('leaderboard-subtitle');
+
+            if (!isLastSundayOfMonth()) {
+                subtitle.textContent = 'Le classement des 3 champions du mois sera dévoilé le dernier dimanche du mois ! Continue à gagner des points ⭐';
+                container.innerHTML = `<span class="text-xs font-bold bg-amber-200/70 text-amber-900 px-3 py-1.5 rounded-xl">Rendez-vous le dernier dimanche du mois 🗓️</span>`;
+                return;
+            }
+
+            subtitle.textContent = '🌟 Félicitations à nos 3 champions de ce mois-ci !';
+            const sorted = [...state.students].sort((a, b) => b.points - a.points).slice(0, 3);
+            const medals = ['🥇 1er', '🥈 2ème', '🥉 3ème'];
+
+            container.innerHTML = sorted.map((s, idx) => `
+                <div class="bg-white border-2 border-amber-400 rounded-2xl px-3.5 py-1.5 flex items-center gap-2 shadow-sm">
+                    <span class="font-extrabold text-amber-600 text-sm">${medals[idx]}</span>
+                    <span class="font-bold text-garden-brown text-sm">${s.username}</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-2 py-0.5 rounded-full">${s.points} pts</span>
+                </div>
+            `).join('');
+        }
+
+        function closeSection() {
+            activeCategory = null;
+            document.getElementById('section-content-area').classList.add('hidden');
+        }
+
+        async function openSection(sec) {
+            const st = getCurrentStudent();
+            if (!st) return;
+
+            activeCategory = sec;
+            const area = document.getElementById('section-content-area');
+            const title = document.getElementById('section-title');
+            const body = document.getElementById('section-body');
+            area.classList.remove('hidden');
+
+            // 1. RÉVISIONS & RÉSUMÉS
+            if (sec === 'revisions') {
+                title.innerHTML = '📚 Révisions & Résumés (المراجعات والملخصات)';
+                addLog(st.username, 'Consultation de la section Révisions & Résumés');
+                await saveState();
+
+                if (!state.revisions || state.revisions.length === 0) {
+                    body.innerHTML = `<p class="text-center text-gray-500 py-6">Aucune révision pour le moment.</p>`;
+                    return;
+                }
+
+                body.innerHTML = `<div class="space-y-5">` + state.revisions.map(r => {
+                    let inner = '';
+                    if (r.type === 'text') {
+                        inner = `<p class="text-sm sm:text-base leading-relaxed whitespace-pre-line bg-garden-cream p-4 rounded-2xl border border-garden-sand font-medium">${r.content}</p>`;
+                    } else if (r.type === 'table') {
+                        const rows = (r.content || '').split('\n').filter(line => line.trim() !== '');
+                        inner = `
+                            <div class="overflow-x-auto rounded-2xl border-2 border-garden-sand">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-garden-green text-white text-sm">
+                                            <th class="p-3">Français 🇫🇷</th>
+                                            <th class="p-3 text-right font-cairo">المعنى بالعربية</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-garden-sand bg-garden-cream text-sm">
+                                        ${rows.map(row => {
+                                            const parts = row.split('-');
+                                            return `<tr>
+                                                <td class="p-3 font-bold text-garden-brown">${parts[0] || ''}</td>
+                                                <td class="p-3 text-right font-bold font-cairo text-garden-green">${parts.slice(1).join('-') || ''}</td>
+                                            </tr>`;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>`;
+                    } else if (r.type === 'link') {
+                        inner = `<a href="${r.content}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 green-btn text-white font-bold px-5 py-3 rounded-2xl text-sm">
+                            <i class="fa-solid fa-up-right-from-square"></i> Ouvrir le lien éducatif
+                        </a>`;
+                    } else if (r.type === 'file') {
+                        inner = `<a href="${r.fileData || '#'}" download="${r.fileName || 'document'}" class="inline-flex items-center gap-2 brown-btn text-white font-bold px-5 py-3 rounded-2xl text-sm">
+                            <i class="fa-solid fa-file-arrow-down"></i> Télécharger le fichier (${r.fileName || 'Document'})
+                        </a>`;
+                    }
+
+                    return `
+                        <div class="p-5 rounded-3xl border-2 border-garden-sand bg-white shadow-sm">
+                            <h4 class="text-base sm:text-lg font-extrabold text-garden-brown mb-3 flex items-center gap-2">
+                                <span class="text-garden-green">🌿</span> ${r.title}
+                            </h4>
+                            ${inner}
+                        </div>
+                    `;
+                }).join('') + `</div>`;
+                return;
+            }
+
+            // 2. RÉVISIONS DES VACANCES (VENDREDI & SAMEDI UNIQUEMENT)
+            if (sec === 'vacances') {
+                title.innerHTML = '🏖️ Révisions des Vacances (مراجعات يوم العطل)';
+                if (!isSyriaWeekend()) {
+                    addLog(st.username, 'Tentative d\'ouverture de Révisions des Vacances (Fermé hors Ven/Sam)');
+                    await saveState();
+                    body.innerHTML = `
+                        <div class="text-center py-8 bg-amber-50 rounded-3xl border-2 border-amber-300 p-6">
+                            <div class="text-5xl mb-3">🔒🏖️</div>
+                            <h4 class="text-lg sm:text-xl font-extrabold text-amber-900 mb-2">Section réservée aux jours de vacances !</h4>
+                            <p class="text-amber-800 font-semibold text-sm sm:text-base mb-2">
+                                Cette section s'ouvre uniquement le <strong>Vendredi</strong> et le <strong>Samedi</strong>.
+                            </p>
+                            <p class="text-xs sm:text-sm text-amber-700 font-cairo font-bold" dir="rtl">
+                                يفتح قسم مراجعات العطل يومي الجمعة والسبت فقط! بمجرد دخولك يوم العطلة ستحصل فوراً على <strong>نقطة هدية (+1 Point)</strong> بالإضافة لنقاط الأسئلة!
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Bonus quotidien (+1 point une seule fois par jour d'ouverture)
+                const todayKey = getSyriaParts().dateKey;
+                if (st.lastVacationBonusDate !== todayKey) {
+                    st.points += 1;
+                    st.lastVacationBonusDate = todayKey;
+                    addLog(st.username, 'Entrée dans Révisions des Vacances : +1 Point bonus quotidien obtenu ⭐');
+                    await saveState();
+                    showStudentToast('🎉 Bravo ! Tu viens de gagner +1 Point pour être entré dans les Révisions des Vacances aujourd\'hui !');
+                } else {
+                    addLog(st.username, 'Consultation de Révisions des Vacances');
+                    await saveState();
+                }
+            }
+
+            if (sec === 'tests') {
+                title.innerHTML = '📝 Tests & Quiz (الاختبارات)';
+                addLog(st.username, 'Ouverture de la section Tests & Quiz');
+                await saveState();
+            }
+            if (sec === 'examens') {
+                title.innerHTML = '🎯 Examens Blancs (الاختبارات التجريبية قبل المذاكرة والامتحان)';
+                addLog(st.username, 'Ouverture de la section Examens Blancs');
+                await saveState();
+            }
+
+            renderQuestionsForCategory(sec);
+        }
+
+        function renderQuestionsForCategory(category) {
+            const st = getCurrentStudent();
+            const body = document.getElementById('section-body');
+            const list = (state.questions || []).filter(q => q.category === category);
+
+            if (list.length === 0) {
+                body.innerHTML = `<p class="text-center text-gray-500 py-6">Aucune question dans cette section pour l'instant.</p>`;
+                return;
+            }
+
+            body.innerHTML = `
+                <div class="mb-5 bg-garden-pale border border-garden-lightgreen/40 p-3.5 rounded-2xl text-xs sm:text-sm text-garden-green font-bold flex items-center justify-between">
+                    <span>💡 Chaque bonne réponse te donne <strong>+1 Point</strong> ! Une mauvaise réponse ne retire aucun point.</span>
+                </div>
+                <div class="space-y-5">
+                    ${list.map((q, idx) => {
+                        const alreadyDone = st.answeredIds && st.answeredIds.includes(q.id);
+                        return `
+                            <div class="p-5 rounded-3xl border-2 border-garden-sand bg-garden-cream/40" id="qcard-${q.id}">
+                                <div class="flex items-start justify-between gap-2 mb-4">
+                                    <h4 class="text-base sm:text-lg font-extrabold text-garden-brown">
+                                        <span class="bg-garden-green text-white px-2.5 py-0.5 rounded-lg text-xs sm:text-sm mr-2">Q${idx + 1}</span>
+                                        ${q.text}
+                                    </h4>
+                                    ${alreadyDone ? `<span class="text-xs font-bold bg-green-100 text-green-800 px-2.5 py-1 rounded-full shrink-0">Complété ✅</span>` : ''}
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="qopts-${q.id}">
+                                    ${q.options.map((opt, oIdx) => `
+                                        <button
+                                            onclick="window.app.submitStudentAnswer('${q.id}', ${oIdx}, this)"
+                                            class="q-opt-btn text-left font-bold p-3.5 rounded-2xl border-2 border-garden-sand bg-white hover:border-garden-green transition flex items-center justify-between text-sm sm:text-base"
+                                        >
+                                            <span>${opt}</span>
+                                            <span class="status-icon"></span>
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <div id="qfeedback-${q.id}" class="mt-3 hidden font-bold text-xs sm:text-sm rounded-xl p-2.5 text-center"></div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        async function submitStudentAnswer(qId, chosenIndex, btnEl) {
+            const st = getCurrentStudent();
+            const q = state.questions.find(item => item.id === qId);
+            if (!st || !q) return;
+
+            const optsContainer = document.getElementById(`qopts-${qId}`);
+            const feedbackEl = document.getElementById(`qfeedback-${qId}`);
+            const allBtns = optsContainer.querySelectorAll('.q-opt-btn');
+
+            allBtns.forEach(b => b.disabled = true);
+
+            const isCorrect = (chosenIndex === q.correct);
+            if (!st.answeredIds) st.answeredIds = [];
+
+            if (isCorrect) {
+                // Réponse CORRECTE : Couleur VERTE, +1 Point, SANS explication supplémentaire
+                btnEl.className = 'text-left font-bold p-3.5 rounded-2xl border-2 border-green-600 bg-green-500 text-white flex items-center justify-between shadow-md text-sm sm:text-base';
+                btnEl.querySelector('.status-icon').innerHTML = '✅';
+
+                feedbackEl.textContent = '✅ Bonne réponse ! (+1 Point)';
+                feedbackEl.className = 'mt-3 font-bold text-xs sm:text-sm rounded-xl p-2.5 text-center bg-green-100 text-green-800 border border-green-300';
+                feedbackEl.classList.remove('hidden');
+
+                if (!st.answeredIds.includes(qId)) {
+                    st.points += 1;
+                    st.correctCount = (st.correctCount || 0) + 1;
+                    st.answeredIds.push(qId);
+                    addLog(st.username, `Bonne réponse ✅ à "${q.text}" (+1 Point ⭐)`);
+                }
+            } else {
+                // Réponse INCORRECTE : Couleur ROUGE + marque d'erreur ❌, 0 point perdu
+                btnEl.className = 'text-left font-bold p-3.5 rounded-2xl border-2 border-red-600 bg-red-500 text-white flex items-center justify-between shadow-md text-sm sm:text-base';
+                btnEl.querySelector('.status-icon').innerHTML = '❌';
+
+                feedbackEl.textContent = '❌ Réponse incorrecte (0 point perdu)';
+                feedbackEl.className = 'mt-3 font-bold text-xs sm:text-sm rounded-xl p-2.5 text-center bg-red-100 text-red-800 border border-red-300';
+                feedbackEl.classList.remove('hidden');
+
+                st.wrongCount = (st.wrongCount || 0) + 1;
+                addLog(st.username, `Réponse incorrecte ❌ à "${q.text}" (0 point perdu)`);
+            }
+
+            await saveState();
+            document.getElementById('student-points-badge').textContent = st.points;
+        }
+
+        // ==========================================
+        // ESPACE PROFESSEUR KRIKOR MKHSIAN (ADMIN)
+        // ==========================================
+        function openAdminModalFromSleep() {
+            document.getElementById('sleep-overlay').classList.add('hidden');
+            switchView('admin-login-view');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('admin-user').value.trim();
+            const p = document.getElementById('admin-pass').value.trim();
+
+            if (u.toLowerCase() === 'krikor' && p === 'garden2026') {
+                switchView('admin-dashboard-view');
+                renderAdminAll();
+            } else {
+                showModal('Accès Refusé', 'Identifiants incorrects. Utilisez krikor / garden2026', '🔐');
+            }
+        }
+
+        function switchAdminTab(tab) {
+            ['students', 'logs', 'revisions', 'quizzes'].forEach(t => {
+                document.getElementById(`adm-panel-${t}`).classList.add('hidden');
+                document.getElementById(`adm-tab-${t}`).className = 'px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-white text-garden-brown border-2 border-garden-sand';
+            });
+            document.getElementById(`adm-panel-${tab}`).classList.remove('hidden');
+            document.getElementById(`adm-tab-${tab}`).className = 'px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm bg-garden-green text-white shadow';
+            renderAdminAll();
+        }
+
+        async function toggleSimOption(key) {
+            if (!state.sim) state.sim = {};
+            state.sim[key] = !state.sim[key];
+            await saveState();
+        }
+
+        function renderAdminAll() {
+            if (!state.sim) state.sim = {};
+            document.getElementById('sim-weekend-state').textContent = state.sim.forceWeekend ? 'مفتوح يدوياً الآن ✅' : 'تلقائي (يفتح الجمعة والسبت)';
+            document.getElementById('sim-sunday-state').textContent = state.sim.forceLastSunday ? 'ظاهرة الآن للطلاب ✅' : 'تلقائي (آخر أحد بالشهر)';
+            document.getElementById('sim-warn-state').textContent = state.sim.forceWarning ? 'يعمل الآن 🔔' : 'إيقاف (يعمل 8:45 م)';
+            document.getElementById('sim-sleep-state').textContent = state.sim.forceSleep ? 'مغلق الآن 🌙' : 'تلقائي (يغلق 9:00 م)';
+
+            // Liste des élèves avec leurs mots de passe et statistiques
+            const tbody = document.getElementById('admin-students-tbody');
+            tbody.innerHTML = (state.students || []).map(s => `
+                <tr class="hover:bg-garden-cream/60">
+                    <td class="p-3 font-extrabold text-garden-brown">${s.username}</td>
+                    <td class="p-3">
+                        <span class="bg-amber-100 text-amber-900 px-2.5 py-1 rounded-lg font-mono font-bold border border-amber-300">${s.password}</span>
+                    </td>
+                    <td class="p-3 font-extrabold text-amber-600 text-base">${s.points} ⭐</td>
+                    <td class="p-3 text-green-700 font-bold">${s.correctCount || 0} ✅</td>
+                    <td class="p-3 text-red-600 font-bold">${s.wrongCount || 0} ❌</td>
+                    <td class="p-3 text-xs text-gray-600 font-mono" dir="ltr">${s.lastLogin || '-'}</td>
+                    <td class="p-3 flex items-center gap-1.5">
+                        <button onclick="window.app.adminAdjustPoints('${s.id}', 1)" class="bg-green-100 hover:bg-green-200 text-green-800 px-2.5 py-1 rounded-lg text-xs font-bold">+1 نقطة</button>
+                        <button onclick="window.app.adminAdjustPoints('${s.id}', -1)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-2.5 py-1 rounded-lg text-xs font-bold">-1</button>
+                        <button onclick="window.app.adminDeleteStudent('${s.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-xs font-bold">حذف</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Journal d'activité
+            const logsList = document.getElementById('admin-logs-list');
+            logsList.innerHTML = (state.logs || []).map(l => `
+                <div class="p-3 rounded-xl bg-garden-cream border border-garden-sand flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+                    <div>
+                        <span class="font-extrabold text-garden-green ml-2">[${l.student}]</span>
+                        <span class="font-semibold text-garden-brown">${l.action}</span>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono" dir="ltr">${l.time}</span>
+                </div>
+            `).join('');
+
+            // Liste des révisions
+            const revList = document.getElementById('admin-revisions-list');
+            revList.innerHTML = (state.revisions || []).map(r => `
+                <div class="p-3.5 rounded-2xl bg-garden-cream border border-garden-sand flex items-center justify-between gap-2">
+                    <div>
+                        <span class="font-extrabold text-garden-brown text-sm sm:text-base">${r.title}</span>
+                        <span class="text-xs bg-white px-2.5 py-0.5 rounded-full mr-2 border font-bold text-garden-green">${r.type}</span>
+                    </div>
+                    <button onclick="window.app.adminDeleteRevision('${r.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-xl text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+
+            // Liste des questions
+            const qList = document.getElementById('admin-questions-list');
+            qList.innerHTML = (state.questions || []).map(q => `
+                <div class="p-3.5 rounded-2xl bg-garden-cream border border-garden-sand flex items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold bg-garden-green text-white px-2.5 py-0.5 rounded-lg ml-2">${q.category}</span>
+                        <span class="font-bold text-garden-brown text-sm sm:text-base">${q.text}</span>
+                    </div>
+                    <button onclick="window.app.adminDeleteQuestion('${q.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-xl text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        async function adminAdjustPoints(studentId, delta) {
+            const st = state.students.find(s => s.id === studentId);
+            if (!st) return;
+            st.points = Math.max(0, st.points + delta);
+            addLog(st.username, `تعديل النقاط من قبل الأستاذ كريكور (${delta > 0 ? '+' : ''}${delta})`);
+            await saveState();
+        }
+
+        async function adminDeleteStudent(studentId) {
+            state.students = state.students.filter(s => s.id !== studentId);
+            await saveState();
+        }
+
+        async function clearLogs() {
+            state.logs = [];
+            await saveState();
+        }
+
+        function toggleRevisionTypeFields() {
+            const t = document.getElementById('rev-type').value;
+            ['text', 'table', 'link', 'file'].forEach(k => {
+                document.getElementById(`rev-field-${k}`).classList.add('hidden');
+            });
+            document.getElementById(`rev-field-${t}`).classList.remove('hidden');
+        }
+
+        document.getElementById('rev-file-input')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            pendingFileName = file.name;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                pendingFileBase64 = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        async function handleAddRevision(e) {
+            e.preventDefault();
+            const title = document.getElementById('rev-title').value.trim();
+            const type = document.getElementById('rev-type').value;
+            let content = '';
+
+            if (type === 'text') content = document.getElementById('rev-content').value.trim();
+            if (type === 'table') content = document.getElementById('rev-table-data').value.trim();
+            if (type === 'link') content = document.getElementById('rev-link-url').value.trim();
+
+            if (!state.revisions) state.revisions = [];
+            state.revisions.unshift({
+                id: 'rev_' + Date.now(),
+                title,
+                type,
+                content,
+                fileName: pendingFileName || null,
+                fileData: pendingFileBase64 || null
+            });
+
+            await saveState();
+            e.target.reset();
+            pendingFileBase64 = null;
+            pendingFileName = null;
+            toggleRevisionTypeFields();
+            showModal('تم النشر بنجاح', 'تمت إضافة المراجعة الجديدة لطلاب الصف الثالث بنجاح!', '📚');
+        }
+
+        async function adminDeleteRevision(id) {
+            state.revisions = state.revisions.filter(r => r.id !== id);
+            await saveState();
+        }
+
+        function toggleQuestionTypeFields() {
+            const type = document.getElementById('q-type').value;
+            const mcqBox = document.getElementById('q-mcq-options');
+            const opt3 = document.getElementById('q-correct-opt3');
+
+            if (type === 'tf') {
+                mcqBox.classList.add('hidden');
+                opt3.classList.add('hidden');
+            } else {
+                mcqBox.classList.remove('hidden');
+                opt3.classList.remove('hidden');
+            }
+        }
+
+        async function handleAddQuestion(e) {
+            e.preventDefault();
+            const category = document.getElementById('q-category').value;
+            const type = document.getElementById('q-type').value;
+            const text = document.getElementById('q-text').value.trim();
+            const correct = parseInt(document.getElementById('q-correct').value, 10);
+
+            let options = [];
+            if (type === 'tf') {
+                options = ['Vrai (صح)', 'Faux (خطأ)'];
+            } else {
+                options = [
+                    document.getElementById('q-opt-0').value.trim() || 'Choix 1',
+                    document.getElementById('q-opt-1').value.trim() || 'Choix 2',
+                    document.getElementById('q-opt-2').value.trim() || 'Choix 3'
+                ];
+            }
+
+            if (!state.questions) state.questions = [];
+            state.questions.push({
+                id: 'q_' + Date.now(),
+                category,
+                type,
+                text,
+                options,
+                correct
+            });
+
+            await saveState();
+            e.target.reset();
+            toggleQuestionTypeFields();
+            showModal('تمت الإضافة', 'تمت إضافة السؤال الجديد بنجاح!', '📝');
+        }
+
+        async function adminDeleteQuestion(id) {
+            state.questions = state.questions.filter(q => q.id !== id);
+            await saveState();
+        }
+
+        // Exposition des fonctions pour les boutons HTML
+        window.app = {
+            switchView,
+            toggleAuthMode,
+            handleStudentRegister,
+            handleStudentLogin,
+            quickStudentDemo,
+            handleStudentLogout,
+            openSection,
+            closeSection,
+            submitStudentAnswer,
+            openAdminModalFromSleep,
+            handleAdminLogin,
+            switchAdminTab,
+            toggleSimOption,
+            adminAdjustPoints,
+            adminDeleteStudent,
+            clearLogs,
+            toggleRevisionTypeFields,
+            handleAddRevision,
+            adminDeleteRevision,
+            toggleQuestionTypeFields,
+            handleAddQuestion,
+            adminDeleteQuestion,
+            closeModal
+        };
+
+        // Démarrage
+        checkSyriaTimeSchedule();
+        setInterval(checkSyriaTimeSchedule, 1000);
+        initCloudStorage();
+    </script>
+</body>
+</html>
